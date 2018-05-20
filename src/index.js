@@ -9,11 +9,13 @@ module.exports = opts => new Routes(opts)
 class Routes {
   constructor ({
     Link = NextLink,
-    Router = NextRouter
+    Router = NextRouter,
+    baseUrl = ""
   } = {}) {
     this.routes = []
     this.Link = this.getLink(Link)
     this.Router = this.getRouter(Router)
+    this.baseUrl = baseUrl
   }
 
   add (name, pattern, page) {
@@ -94,6 +96,10 @@ class Routes {
 
       if (nameOrUrl) {
         Object.assign(newProps, this.findAndGetUrls(nameOrUrl, params).urls)
+      }
+
+      if (newProps.as) {
+        Object.assign(newProps, {as: this.baseUrl + newProps.as})
       }
 
       return <Link {...newProps} />
